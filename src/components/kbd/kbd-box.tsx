@@ -7,7 +7,17 @@ type BoxProps = {
   words: string[]
   currentLetter: number
   errorMap: { [key: number]: boolean }
+  wordsSettings?: number
 }
+
+const WordsSkeleton = () => (
+  <>
+    <Skeleton className="h-6 w-11/12" />
+    <Skeleton className="h-6 w-10/12" />
+    <Skeleton className="h-6 w-11/12" />
+    <Skeleton className="h-6 w-10/12" />
+  </>
+)
 
 export const KBDBox: FC<BoxProps> = ({ words, currentLetter, errorMap }) => {
   let renderedLetter = 0
@@ -35,12 +45,9 @@ export const KBDBox: FC<BoxProps> = ({ words, currentLetter, errorMap }) => {
           })}
         </CardContent>
       ) : (
-        <div className="flex w-full items-center justify-center space-x-4 opacity-50">
+        <div className="flex w-full items-center justify-center space-x-4 py-16 opacity-50">
           <div className="w-full space-y-2 px-5">
-            <Skeleton className="h-4 w-11/12" />
-            <Skeleton className="h-4 w-10/12" />
-            <Skeleton className="h-4 w-11/12" />
-            <Skeleton className="h-4 w-10/12" />
+            <WordsSkeleton />
           </div>
         </div>
       )}
