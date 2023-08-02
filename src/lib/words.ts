@@ -6,12 +6,13 @@ import { EN_LANGUAGE } from '@/constants/ui'
 export const getWords = (maxWordsCount: number, language = EN_LANGUAGE): string[] => {
   const maxCharacters = maxWordsCount - 1 + maxWordsCount * 5 // spaces + average word is 5 characters long
   let characterCount = 0
-  const words = mostUsedEnglishWords
+  const words = [...mostUsedEnglishWords]
   const result: string[] = []
 
   const generateWord = () => {
-    let number = randomIntFromInterval(0, words.length - 1)
-    let word = words[number].toLocaleLowerCase()
+    const number = randomIntFromInterval(0, words.length - 1)
+    const word = words[number].toLocaleLowerCase()
+    words.splice(number, 1) // remove word from array to avoid duplicates
     return word
   }
 
@@ -20,11 +21,7 @@ export const getWords = (maxWordsCount: number, language = EN_LANGUAGE): string[
       break
     }
 
-    let word = generateWord()
-    if (word === result[index - 1]) {
-      word = generateWord()
-    }
-
+    const word = generateWord()
     characterCount += word.length
 
     if (index === maxWordsCount - 1 || characterCount >= maxCharacters) {
