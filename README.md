@@ -1,3 +1,5 @@
+![fast_flicks logo](/logo.png)
+
 # Fast⎵Flicks - Improve Your 10 Fingers Typing Speed
 
 ## Description
