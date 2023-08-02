@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+  binaryTargets   = ["native", "linux-arm64-openssl-1.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String               @id @unique
+  username    String?              @unique @db.VarChar(10)
+  Leaderboard Leaderboard[]
+  highscores  LeaderboardByWords[]
+  Top5ByWords Top5ByWords[]
+}
+
+model Leaderboard {
+  id        Int      @default(autoincrement())
+  wpm       Int
+  acc       Int
+  score     Float
+  words     Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([userId, words])
+}
+
+view LeaderboardByWords {
+  id        Int
+  wpm       Int
+  acc       Int
+  score     Float
+  words     Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([userId, words])
+  @@map("leaderboard_by_words")
+}
+
+view Top5ByWords {
+  id        Int
+  wpm       Int
+  acc       Int
+  score     Float
+  words     Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([userId, words])
+  @@map("top5_leaderboard")
+}

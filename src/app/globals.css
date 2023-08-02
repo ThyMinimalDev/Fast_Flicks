@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+svg {
+  stroke-width: 1.25;
+}
+
+svg:hover {
+  stroke-width: 1.5;
+}
+
+/* Define the keyframes for the soft shaking animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0); /* No movement at the start and end */
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-1px); /* Move 2px to the left on these keyframes */
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(1px); /* Move 2px to the right on these keyframes */
+  }
+}
+
+/* Apply the animation to the error message element */
+.error-shake {
+  animation: shake 0.4s ease-in-out; /* The animation will last 0.5 seconds, ease in and out */
+}
+
+.text-content > h1 {
+  font-size: 24px;
+}
+
+.text-content > h2 {
+  font-size: 20px;
+}
+
+.text-content > h3 {
+  font-size: 18px;
+}
+
+.text-content > p {
+  margin: 14px;
+}
+
+.text-content > ul {
+  margin: 14px;
+}
+
+.text-content > ul > li {
+  margin-top: 6px;
+}
