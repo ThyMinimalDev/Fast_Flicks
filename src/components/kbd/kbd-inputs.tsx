@@ -10,7 +10,7 @@ type InputsProps = {
 
 export const KBDInputs: FC<InputsProps> = ({ inputs, firstLetter }) => {
   return (
-    <div className="flex h-9 w-11/12 select-none flex-row gap-4 overflow-hidden">
+    <div className="flex h-9 w-11/12 select-none flex-row gap-1 overflow-hidden md:gap-4">
       {Boolean(inputs.length) ? (
         inputs.map((input, index) => (
           <div
@@ -25,7 +25,7 @@ export const KBDInputs: FC<InputsProps> = ({ inputs, firstLetter }) => {
           </div>
         ))
       ) : (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 text-xs sm:text-base">
           {firstLetter && (
             <>
               Press

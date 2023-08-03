@@ -30,7 +30,9 @@ export const KBD: FC<KBDProps> = () => {
   })
 
   return (
-    <div className={`flex w-[730px] flex-col gap-3 font-extralight`}>
+    <div
+      className={`flex w-[330px] flex-col gap-3  font-extralight sm:w-[530px] md:w-[730px] `}
+    >
       <div className="flex w-full flex-row justify-between">
         <TooltipProvider delayDuration={300}>
           <Settings wordCount={wordsSettings ?? 50} onChangeWordCount={setWordsCount} />

@@ -29,7 +29,9 @@ export const UserModal: FC<ModalProps> = ({ isOpen, children }) => {
 
   return (
     <AlertDialog open={mounted && isOpen}>
-      <AlertDialogContent className={`max-h-[97vh] min-w-[600px] overflow-auto`}>
+      <AlertDialogContent
+        className={`max-h-[97vh] min-w-[300px] overflow-auto sm:min-w-[600px]`}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center text-4xl font-light">
             Pick your Username

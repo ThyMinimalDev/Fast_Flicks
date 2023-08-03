@@ -26,8 +26,8 @@ const Row: FC<RowProps> = ({ acc, wpm, position, score, username, className }) =
   <TableRow className={cn('border-b-0', className)}>
     <TableCell className="text-left font-medium">#{position}</TableCell>
     <TableCell className="text-left font-medium">{username ?? '-----'}</TableCell>
-    <TableCell className="text-left"> {wpm ?? '---'}</TableCell>
-    <TableCell className="text-center">{acc ?? '--'}%</TableCell>
+    <TableCell className="hidden text-left sm:table-cell"> {wpm ?? '---'}</TableCell>
+    <TableCell className="hidden text-center sm:table-cell">{acc ?? '--'}%</TableCell>
     <TableCell className="text-right">{score ? Math.round(score) : '-----'}</TableCell>
   </TableRow>
 )
@@ -53,8 +53,8 @@ export const LeaderboardTable: FC<TableProps> = ({ scores, words }) => {
         <TableRow className="border-b-0 ">
           <TableHead className="text-left"></TableHead>
           <TableHead className="text-left">Name</TableHead>
-          <TableHead className="text-left">WPM</TableHead>
-          <TableHead className="text-center">ACC</TableHead>
+          <TableHead className="hidden text-left sm:table-cell">WPM</TableHead>
+          <TableHead className="hidden text-center sm:table-cell">ACC</TableHead>
           <TableHead className="text-right">Score</TableHead>
         </TableRow>
       </TableHeader>
