@@ -26,9 +26,9 @@ export const CookieConsent = () => {
   }, [toggleCookieConsent])
 
   return showCookieConsent ? (
-    <div className="absolute bottom-0 box-border flex w-[99.7vw] flex-col items-center justify-center  border border-sun-accent bg-sun-background p-4 dark:border-moon-accent dark:bg-moon-background">
+    <div className="absolute bottom-0.5 box-border flex w-[99.7vw] flex-col items-center justify-center  border border-sun-accent bg-sun-background p-4 dark:border-moon-accent dark:bg-moon-background">
       <div className="flex flex-col items-center gap-4">
-        <p>
+        <p className="text-sm sm:text-base 2xl:text-lg">
           We use tracking cookies to understand how you use the product and help us
           improve it. Please accept cookies to help us improve.
         </p>
