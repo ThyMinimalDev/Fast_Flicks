@@ -13,7 +13,7 @@ const Keyboard = ({ value, isError, className = '' }: KeyboardProps) => {
     <div
       className={cn(
         isError && 'text-sun-error dark:text-moon-error',
-        'flex h-7 w-7 flex-col items-center justify-center rounded-md border text-lg leading-[2em]',
+        'flex h-5 w-5 flex-col items-center justify-center rounded-md border text-sm leading-[2em] sm:h-7 sm:w-7 sm:text-lg',
         className
       )}
     >

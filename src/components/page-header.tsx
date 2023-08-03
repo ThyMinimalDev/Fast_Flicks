@@ -38,7 +38,7 @@ export const PageHeader: FC<HeaderProps> = ({ isAuth, className }) => {
   }
 
   return (
-    <div className={cn('mb-4 w-full px-9', className)}>
+    <div className={cn('mb-4 w-full px-2 sm:px-9', className)}>
       <div className="mt-6 flex flex-row justify-between">
         <Link href="/">
           <div className="flex select-none flex-row text-base">

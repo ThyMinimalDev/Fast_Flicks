@@ -11,9 +11,9 @@ type FooterProps = {
 
 export const PageFooter: FC<FooterProps> = ({ className }) => {
   return (
-    <div className={cn('w-full px-9', className)}>
+    <div className={cn('w-full px-2 sm:px-9', className)}>
       <Separator className="mb-7" />
-      <div className="mb-6 flex flex-row justify-between text-sm">
+      <div className="mb-6 flex flex-row justify-between text-xs sm:text-sm">
         <div>Copyright 2023 Fast{SPACE_SYMBOL}Flicks</div>
 
         <div className="flex flex-row items-center justify-center gap-4">

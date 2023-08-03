@@ -24,7 +24,7 @@ export const KBDBox: FC<BoxProps> = ({ words, currentLetter, errorMap }) => {
   return (
     <Card className="border-black flex min-h-[200px] w-full flex-col justify-center rounded-xl border-2">
       {Boolean(words.length) ? (
-        <CardContent className="flex select-none flex-row flex-wrap px-7 py-16 md:text-xl lg:text-2xl">
+        <CardContent className="flex select-none flex-row flex-wrap px-7 py-16 text-lg md:text-xl lg:text-2xl">
           {words.map((word, index) => {
             return (
               <div key={word + index}>

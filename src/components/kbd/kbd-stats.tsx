@@ -8,7 +8,7 @@ type StatsProps = {
 }
 const KBDStats: FC<StatsProps> = ({ WPM, ACC }) => {
   return (
-    <div className="flex flex-row items-center gap-1.5">
+    <div className="flex flex-row items-center gap-1.5 text-xs sm:text-base">
       <Tooltip>
         <TooltipTrigger className="cursor-default">
           <span>{WPM || '--'} WPM </span>{' '}

@@ -12,7 +12,7 @@ type SettingsProps = {
 
 const KBDSettings: FC<SettingsProps> = ({ wordCount = 50, onChangeWordCount }) => {
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div className="flex flex-row items-center gap-1 text-xs sm:text-base">
       <SettingsIcon
         width={18}
         height={18}

@@ -1,6 +1,5 @@
 'use client'
 import React, { FC } from 'react'
-import { AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/form'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
+import { Button } from '../ui/button'
 
 const formSchema = z.object({
   username: z
@@ -57,13 +57,13 @@ export const UserForm: FC<FormProps> = ({ onCancel, onSubmit, disabled }) => {
           )}
         />
 
-        <div className="flex flex-row justify-end gap-2">
-          <AlertDialogCancel disabled={disabled} onClick={onCancel}>
+        <div className="flex flex-row items-center justify-end gap-2">
+          <Button disabled={disabled} onClick={onCancel}>
             Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction type="submit" disabled={disabled}>
+          </Button>
+          <Button type="submit" disabled={disabled}>
             Submit
-          </AlertDialogAction>
+          </Button>
         </div>
       </form>
     </Form>

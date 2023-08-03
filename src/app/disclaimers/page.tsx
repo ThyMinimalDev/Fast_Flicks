@@ -6,7 +6,7 @@ export default async function Disclaimers() {
     <main>
       <div
         className={cn(
-          'text-content flex w-[50vw] flex-col gap-2 pb-12 pt-10 duration-500 ease-in-out animate-in fade-in-0 fill-mode-forwards'
+          'text-content flex w-[70vw] flex-col gap-2 pb-12 pt-10 duration-500 ease-in-out animate-in fade-in-0 fill-mode-forwards md:w-[65vw] lg:w-[55vw]'
         )}
       >
         <h1>Disclaimer</h1>

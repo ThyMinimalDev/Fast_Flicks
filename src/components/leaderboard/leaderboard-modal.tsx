@@ -26,7 +26,7 @@ export const LeaderboardModal: FC<ModalProps> = ({ scoresByLeaderboard }) => {
   return (
     <AlertDialog open={isOpenLeaderboard}>
       <AlertDialogContent
-        className={`max-h-[97vh] min-w-[600px] overflow-auto`}
+        className={`max-h-[97vh] min-w-[300px] overflow-auto sm:min-w-[600px]`}
         onEscapeKeyDown={toggleLeaderboard}
       >
         <AlertDialogHeader>
