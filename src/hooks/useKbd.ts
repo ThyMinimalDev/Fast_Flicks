@@ -188,6 +188,7 @@ export const useKbd = ({
     wordsString,
     wordsSettings,
     user,
+    language,
   ])
 
   return {
