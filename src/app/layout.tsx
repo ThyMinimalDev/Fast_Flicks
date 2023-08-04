@@ -29,7 +29,8 @@ const comfortaa = Comfortaa({ subsets: ['latin'], weight: '400', preload: true }
 
 export const metadata: Metadata = {
   title: 'FastFlicks',
-  description: 'Minimalistic typing test, improve your 10 fingers typing speed',
+  description:
+    'Enhance your 10-finger typing speed across multiple languages with our minimalistic typing test app. Compete on the leaderboard and boost your typing skills.',
   icons: { icon: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon.ico' },
 }
 
