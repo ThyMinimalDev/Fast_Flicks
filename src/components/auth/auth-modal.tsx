@@ -21,7 +21,9 @@ type AuthProps = {
 export const AuthModal: FC<AuthProps> = ({ isOpen, onAuth, onClose }) => {
   return (
     <AlertDialog open={isOpen}>
-      <AlertDialogContent className={`max-h-[97vh] min-w-[600px] overflow-auto`}>
+      <AlertDialogContent
+        className={`max-h-[97vh] min-w-[400px] overflow-auto sm:min-w-[500px] md:min-w-[600px]`}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center text-4xl font-light">
             Sign-In
