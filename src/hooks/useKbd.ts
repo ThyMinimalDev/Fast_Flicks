@@ -5,9 +5,9 @@ import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { useEvent, useKey, useToggle } from 'react-use'
 import { ulid } from 'ulidx'
-import { useStore } from 'zustand'
-import { useToast } from '@/components/ui/use-toast'
+import { ToastObject, useToast } from '@/components/ui/use-toast'
 import { UserWithHighscores } from '@/types/user'
+let capsLockToast: ToastObject | undefined = undefined
 
 type useKbdProps = {
   isOpenLeaderboard: boolean
@@ -41,7 +41,6 @@ export const useKbd = ({
 }: useKbdProps) => {
   const { toast } = useToast()
   const [, startTransition] = useTransition()
-  const user = useStore(useBoundStore, state => state.user)
   const [currentLetter, setCurrentLetter] = useState<number>(0)
   const [words, setWords] = useState<string[]>([])
   const [errorMap, setErrorMap] = useState<{ [key: number]: boolean }>({})
@@ -50,15 +49,12 @@ export const useKbd = ({
   const [inputs, setInputs] = useState<InputType[]>([])
   const startTimeStampRef = useRef(0)
   const endTimeStampRef = useRef(0)
-  const wordsSettings =
-    useStore(useBoundStore, state => state.wordsSetting) ?? DEFAULT_WORDS_SETTING
-  const setWPM = useStore(useBoundStore, state => state.setWPM)
-  const setACC = useStore(useBoundStore, state => state.setACC)
   const wordsString = useMemo(() => words.join(''), [words])
   const isModalOpen = useMemo(
     () => isOpenLeaderboard || isOpenUserModal || isOpenQuickAccess,
     [isOpenLeaderboard, isOpenQuickAccess, isOpenUserModal]
   )
+  const [capsLocked, toggleCapsLock] = useToggle(false)
   const resetState = () => {
     setInputs([])
     setTotalEntries(0)
@@ -69,11 +65,11 @@ export const useKbd = ({
 
   const handleReset = useCallback(() => {
     if (!isModalOpen) {
-    resetState()
-    setWPM(0)
-    setACC(0)
+      resetState()
+      setWPM(0)
+      setACC(0)
       const currentWords = getWords(wordsSettings, language)
-    setWords(currentWords)
+      setWords(currentWords)
     }
   }, [setACC, setWPM, wordsSettings, isModalOpen, language])
 
@@ -83,7 +79,7 @@ export const useKbd = ({
     setWords(currentWords)
   }, [wordsSettings, language])
 
-  useKey('Escape', handleReset, undefined, [wordsSettings])
+  useKey('Escape', handleReset, undefined, [wordsSettings, language])
 
   const onKeyDown = useCallback(
     ({ key, isTrusted }: { key: string; isTrusted: boolean }) => {
@@ -129,6 +125,20 @@ export const useKbd = ({
   )
 
   useEvent('keydown', onKeyDown)
+  useEvent('keyup', event => {
+    if (!capsLocked && event.getModifierState('CapsLock')) {
+      toggleCapsLock(true)
+      capsLockToast = toast({
+        title: 'Caps Lock On!',
+        description: 'it may stop you from doing the test',
+      })
+    }
+    if (capsLocked && !event.getModifierState('CapsLock')) {
+      if (capsLocked && capsLockToast) toggleCapsLock(false)
+      capsLockToast?.dismiss()
+      capsLockToast = undefined
+    }
+  })
 
   // Reset and generate new words when settings change
   useEffect(() => {
