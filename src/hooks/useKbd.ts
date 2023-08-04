@@ -145,8 +145,7 @@ export const useKbd = ({
     handleReset()
     const currentWords = getWords(wordsSettings, language)
     setWords(currentWords)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wordsSettings, language])
+  }, [wordsSettings, language, handleReset])
 
   // When user reaches end of current test text:
   // Compute stats & start next text test
@@ -179,7 +178,6 @@ export const useKbd = ({
       }
       handleNext()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     currentLetter,
     handleNext,
@@ -191,6 +189,8 @@ export const useKbd = ({
     wordsSettings,
     user,
     language,
+    onNewHighscore,
+    toast,
   ])
 
   return {
