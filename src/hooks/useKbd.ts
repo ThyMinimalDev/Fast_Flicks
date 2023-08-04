@@ -54,6 +54,7 @@ export const useKbd = ({
     () => isOpenLeaderboard || isOpenUserModal || isOpenQuickAccess,
     [isOpenLeaderboard, isOpenQuickAccess, isOpenUserModal]
   )
+
   const [capsLocked, toggleCapsLock] = useToggle(false)
   const resetState = () => {
     setInputs([])
@@ -79,7 +80,7 @@ export const useKbd = ({
     setWords(currentWords)
   }, [wordsSettings, language])
 
-  useKey('Escape', handleReset, undefined, [wordsSettings, language])
+  useKey('Escape', handleReset, undefined, [wordsSettings, language, isModalOpen])
 
   const onKeyDown = useCallback(
     ({ key, isTrusted }: { key: string; isTrusted: boolean }) => {
