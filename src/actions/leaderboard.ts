@@ -1,6 +1,6 @@
 'use server'
 import { prisma } from '@/lib/prisma'
-import { WordsCountSettings } from '@/types/kbd'
+import { LanguageSetting, WordsCountSettings } from '@/types/kbd'
 import { UserWithHighscores } from '@/types/user'
 import { revalidatePath } from 'next/cache'
 
@@ -9,7 +9,8 @@ export async function upsertHighscore(
   wpm: number,
   acc: number,
   score: number,
-  words: WordsCountSettings
+  words: WordsCountSettings,
+  language: LanguageSetting
 ) {
   try {
     if (!user) {
@@ -28,6 +29,7 @@ export async function upsertHighscore(
         score,
         userId: user.id,
         words,
+        language,
       },
     })
     revalidatePath('/')
