@@ -52,7 +52,7 @@ export const QuickAccess: FC<QuickAccessProps> = ({
       >
         <CommandInput
           onBlur={() => toggleModal(false)}
-          placeholder="Switch language and change settings..."
+          placeholder="Pick language and send commands..."
         />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
