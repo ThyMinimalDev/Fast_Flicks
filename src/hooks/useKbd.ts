@@ -163,7 +163,9 @@ export const useKbd = ({
       const score = (WPM * 0.7 + ACC * 1.3) * (wordsSettings / 2)
       setWPM(WPM)
       setACC(ACC)
-      const userHighscore = user?.highscores.find(score => score.words === wordsSettings)
+      const userHighscore = user?.highscores.find(
+        score => score.words === wordsSettings && score.language === language
+      )
       const currentScore = userHighscore?.score ?? 0
       if (user?.username && score > currentScore) {
         startTransition(() =>
