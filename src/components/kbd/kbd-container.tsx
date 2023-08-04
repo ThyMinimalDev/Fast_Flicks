@@ -10,15 +10,23 @@ import { MemoizedKBDStats as Stats } from './kbd-stats'
 import { MemoizedKBDInfoBubble as KBDInfoBubble } from './kbd-info-bubble'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { upsertHighscore } from '@/actions/leaderboard'
+import { EN_LANGUAGE } from '@/constants/ui'
+import { DEFAULT_WORDS_SETTING } from '@/constants/kbd'
 
 type KBDProps = {}
 
 export const KBD: FC<KBDProps> = () => {
+  const language = useStore(useBoundStore, state => state.language) ?? EN_LANGUAGE
+  const isOpenQuickAccess =
+    useStore(useBoundStore, state => state.isOpenQuickAccess) ?? false
   const isOpenLeaderboard =
     useStore(useBoundStore, state => state.isOpenLeaderboard) ?? false
   const user = useStore(useBoundStore, state => state.user)
   const isFirstVisit = useStore(useBoundStore, state => state.isFirstVisit)
-  const wordsSettings = useStore(useBoundStore, state => state.wordsSetting)
+  const wordsSettings =
+    useStore(useBoundStore, state => state.wordsSetting) ?? DEFAULT_WORDS_SETTING
+  const setWPM = useBoundStore(state => state.setWPM)
+  const setACC = useBoundStore(state => state.setACC)
   const setWordsCount = useBoundStore(state => state.setWordsCount)
   const setIsFirstVisit = useBoundStore(state => state.setIsFirstVisit)
   const ACC = useStore(useBoundStore, state => state.ACC) ?? 0
@@ -26,7 +34,13 @@ export const KBD: FC<KBDProps> = () => {
   const { inputs, words, currentLetter, errorMap, wordsString } = useKbd({
     onNewHighscore: upsertHighscore,
     isOpenLeaderboard,
+    isOpenQuickAccess,
     isOpenUserModal: Boolean(user && !user.username),
+    language,
+    wordsSettings,
+    setWPM,
+    setACC,
+    user,
   })
 
   return (

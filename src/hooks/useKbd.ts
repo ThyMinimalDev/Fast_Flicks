@@ -1,10 +1,9 @@
-import { DEFAULT_WORDS_SETTING, SPACE_SYMBOL } from '@/constants/kbd'
+import { SPACE_SYMBOL } from '@/constants/kbd'
 import { getAcc, getGrossWPM, getWords } from '@/lib/words'
-import { useBoundStore } from '@/state/useBoundStore'
-import { InputType, WordsCountSettings } from '@/types/kbd'
+import { InputType, LanguageSetting, WordsCountSettings } from '@/types/kbd'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
-import { useEvent, useKey } from 'react-use'
+import { useEvent, useKey, useToggle } from 'react-use'
 import { ulid } from 'ulidx'
 import { useStore } from 'zustand'
 import { useToast } from '@/components/ui/use-toast'
@@ -13,19 +12,32 @@ import { UserWithHighscores } from '@/types/user'
 type useKbdProps = {
   isOpenLeaderboard: boolean
   isOpenUserModal: boolean
+  isOpenQuickAccess: boolean
   onNewHighscore: (
     user: UserWithHighscores,
     wpm: number,
     acc: number,
     score: number,
-    words: WordsCountSettings
+    words: WordsCountSettings,
+    language: LanguageSetting
   ) => Promise<void>
+  language: LanguageSetting
+  wordsSettings: number
+  setWPM: (wpm: number) => void
+  setACC: (acc: number) => void
+  user?: UserWithHighscores
 }
 
 export const useKbd = ({
   isOpenLeaderboard,
   isOpenUserModal,
+  isOpenQuickAccess,
   onNewHighscore,
+  language,
+  setACC,
+  setWPM,
+  wordsSettings,
+  user,
 }: useKbdProps) => {
   const { toast } = useToast()
   const [, startTransition] = useTransition()
@@ -43,7 +55,10 @@ export const useKbd = ({
   const setWPM = useStore(useBoundStore, state => state.setWPM)
   const setACC = useStore(useBoundStore, state => state.setACC)
   const wordsString = useMemo(() => words.join(''), [words])
-
+  const isModalOpen = useMemo(
+    () => isOpenLeaderboard || isOpenUserModal || isOpenQuickAccess,
+    [isOpenLeaderboard, isOpenQuickAccess, isOpenUserModal]
+  )
   const resetState = () => {
     setInputs([])
     setTotalEntries(0)
@@ -53,24 +68,26 @@ export const useKbd = ({
   }
 
   const handleReset = useCallback(() => {
+    if (!isModalOpen) {
     resetState()
     setWPM(0)
     setACC(0)
-    const currentWords = getWords(wordsSettings)
+      const currentWords = getWords(wordsSettings, language)
     setWords(currentWords)
-  }, [setACC, setWPM, wordsSettings])
+    }
+  }, [setACC, setWPM, wordsSettings, isModalOpen, language])
 
   const handleNext = useCallback(() => {
     resetState()
-    const currentWords = getWords(wordsSettings)
+    const currentWords = getWords(wordsSettings, language)
     setWords(currentWords)
-  }, [wordsSettings])
+  }, [wordsSettings, language])
 
   useKey('Escape', handleReset, undefined, [wordsSettings])
 
   const onKeyDown = useCallback(
     ({ key, isTrusted }: { key: string; isTrusted: boolean }) => {
-      if (!isOpenLeaderboard && !isOpenUserModal && isTrusted && key?.length === 1) {
+      if (!isModalOpen && isTrusted && key?.length === 1) {
         setTotalEntries(totalEntries => {
           if (totalEntries === 0) {
             startTimeStampRef.current = Date.now()
@@ -108,7 +125,7 @@ export const useKbd = ({
         })
       }
     },
-    [wordsString, isOpenLeaderboard, isOpenUserModal]
+    [wordsString, isModalOpen]
   )
 
   useEvent('keydown', onKeyDown)
@@ -116,10 +133,10 @@ export const useKbd = ({
   // Reset and generate new words when settings change
   useEffect(() => {
     handleReset()
-    const currentWords = getWords(wordsSettings)
+    const currentWords = getWords(wordsSettings, language)
     setWords(currentWords)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wordsSettings])
+  }, [wordsSettings, language])
 
   // When user reaches end of current test text:
   // Compute stats & start next text test
@@ -140,7 +157,7 @@ export const useKbd = ({
       const currentScore = userHighscore?.score ?? 0
       if (user?.username && score > currentScore) {
         startTransition(() =>
-          onNewHighscore(user, WPM, ACC, score, wordsSettings).then(() => {
+          onNewHighscore(user, WPM, ACC, score, wordsSettings, language).then(() => {
             toast({
               title: 'New Highscore! 🎉',
               description: 'Your rank has been updated in the leaderboard',

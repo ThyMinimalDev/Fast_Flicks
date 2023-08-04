@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { UiSlice } from './createUiSlice'
-import { WordsCountSettings } from '@/types/kbd'
+import { LanguageSetting, WordsCountSettings } from '@/types/kbd'
+import { EN_LANGUAGE } from '@/constants/ui'
 
 export interface KbdSlice {
   wordsSetting: WordsCountSettings
@@ -9,6 +10,8 @@ export interface KbdSlice {
   setWPM: (WPM: number) => void
   WPM: number
   ACC: number
+  language: LanguageSetting
+  setLang: (language: LanguageSetting) => void
 }
 
 export const createKbdSlice: StateCreator<UiSlice & KbdSlice, [], [], KbdSlice> = (
@@ -18,8 +21,10 @@ export const createKbdSlice: StateCreator<UiSlice & KbdSlice, [], [], KbdSlice> 
   wordsSetting: 25,
   ACC: 0,
   WPM: 0,
+  language: EN_LANGUAGE,
   setWPM: (WPM: number) => set(() => ({ WPM })),
   setACC: (ACC: number) => set(() => ({ ACC })),
+  setLang: (language: LanguageSetting) => set(() => ({ language })),
   setWordsCount: (words: WordsCountSettings) =>
     set(() => {
       return { wordsSetting: words }

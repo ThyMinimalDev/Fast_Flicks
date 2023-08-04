@@ -71,7 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
           <PageFooter className={`${comfortaa.className}`} />
           <Suspense>
-            <LeaderboardContainer />
+            <LeaderboardContainer user={user} />
             <NavigationEvents />
           </Suspense>
           <AuthContainer isAuth={isAuth} />

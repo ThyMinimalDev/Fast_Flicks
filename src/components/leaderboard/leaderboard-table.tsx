@@ -8,9 +8,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { LeaderboardWithUser } from '@/types/leaderboard'
-import { useStore } from 'zustand'
-import { useBoundStore } from '@/state/useBoundStore'
 import { cn } from '@/lib/utils'
+import { LeaderboardByWords } from '@prisma/client'
 
 const scoresTemplate = [...new Array(5)]
 
@@ -36,17 +35,17 @@ const MemoizedRow = React.memo(Row)
 
 type TableProps = {
   scores?: LeaderboardWithUser[]
-  words: number
+  userHighscore?: LeaderboardByWords
+  username?: string
 }
 
-export const LeaderboardTable: FC<TableProps> = ({ scores, words }) => {
-  const user = useStore(useBoundStore, state => state.user)
+export const LeaderboardTable: FC<TableProps> = ({ scores, userHighscore, username }) => {
   const isInTop5 = Boolean(
-    user?.id ? scores?.some(highscore => highscore.user.id === user.id) : false
+    userHighscore?.userId
+      ? scores?.some(highscore => highscore.user.id === userHighscore.userId)
+      : false
   )
-  const currentUserHighscore = !isInTop5
-    ? user?.highscores.find(score => score.words === words)
-    : null
+  const currentUserHighscore = !isInTop5 ? userHighscore : null
   return (
     <Table>
       <TableHeader className="[&_tr]:border-b-0">
@@ -72,14 +71,14 @@ export const LeaderboardTable: FC<TableProps> = ({ scores, words }) => {
             />
           )
         })}
-        {user && currentUserHighscore && (
+        {username && currentUserHighscore && (
           <MemoizedRow
             acc={currentUserHighscore.acc}
             wpm={currentUserHighscore.wpm}
-            username={user?.username}
+            username={username}
             position={currentUserHighscore.position}
             score={currentUserHighscore.score}
-            className="animate-pulse repeat-[3] [&>*:first-child]:underline"
+            className="animate-pulse repeat-[2] [&>*:first-child]:underline"
           />
         )}
       </TableBody>

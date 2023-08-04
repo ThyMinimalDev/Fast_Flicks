@@ -19,6 +19,7 @@ export const useBoundStore = create<UiSlice & KbdSlice & UserSlice>()(
           ...(persistedState as UiSlice & KbdSlice),
           isOpenLoginModal: false,
           isOpenLeaderboard: false,
+          isOpenQuickAccess: false,
           user: undefined,
         }
       },

@@ -1,12 +1,52 @@
-import { commonWords as mostUsedEnglishWords } from '@/data/en'
+import { commonWords as mostUsedEnWords } from '@/data/en'
+import { commonWords as mostUsedFrWords } from '@/data/fr'
+import { commonWords as mostUsedRuWords } from '@/data/ru'
+import { commonWords as mostUsedCnWords } from '@/data/cn'
+import { commonWords as mostUsedJpWords } from '@/data/jp'
+import { commonWords as mostUsedKrWords } from '@/data/kr'
+import { commonWords as mostUsedEsWords } from '@/data/es'
+
 import { randomIntFromInterval } from './utils'
 import { SPACE_SYMBOL } from '@/constants/kbd'
-import { EN_LANGUAGE } from '@/constants/ui'
+import {
+  EN_LANGUAGE,
+  KR_LANGUAGE,
+  ES_LANGUAGE,
+  JP_LANGUAGE,
+  RU_LANGUAGE,
+  FR_LANGUAGE,
+  CN_LANGUAGE,
+} from '@/constants/ui'
+import { LanguageSetting } from '@/types/kbd'
 
-export const getWords = (maxWordsCount: number, language = EN_LANGUAGE): string[] => {
+const pickCommonWords = (lang: LanguageSetting) => {
+  switch (lang) {
+    case EN_LANGUAGE:
+      return mostUsedEnWords
+    case FR_LANGUAGE:
+      return mostUsedFrWords
+    case KR_LANGUAGE:
+      return mostUsedKrWords
+    case JP_LANGUAGE:
+      return mostUsedJpWords
+    case RU_LANGUAGE:
+      return mostUsedRuWords
+    case ES_LANGUAGE:
+      return mostUsedEsWords
+    case CN_LANGUAGE:
+      return mostUsedCnWords
+    default:
+      return mostUsedEnWords
+  }
+}
+
+export const getWords = (
+  maxWordsCount: number,
+  language: LanguageSetting = EN_LANGUAGE
+): string[] => {
   const maxCharacters = maxWordsCount - 1 + maxWordsCount * 5 // spaces + average word is 5 characters long
   let characterCount = 0
-  const words = [...mostUsedEnglishWords]
+  const words = [...pickCommonWords(language)]
   const result: string[] = []
 
   const generateWord = () => {

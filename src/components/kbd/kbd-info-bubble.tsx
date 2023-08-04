@@ -17,15 +17,31 @@ const KBDInfoBubble: FC<InfoBubbleProps> = ({ handleChange, isFirstVisit }) => {
           strokeWidth={1.1}
         />
       </PopoverTrigger>
-      <PopoverContent className="mt-1 p-4">
+      <PopoverContent className="mt-1 flex flex-col gap-2 p-2" side="bottom">
         <div className="flex flex-row items-center">
           <MemoizedKeyboard
-            className="h-10 w-10 text-base sm:h-10 sm:w-10"
+            className="h-6 w-6 text-xs sm:h-8 sm:w-8 sm:text-sm"
             value="ESC"
             isError={false}
           />
+
           <span className="mx-1">:</span>
-          <span>Restart the test</span>
+          <span className="text-sm sm:text-base">Restart the test</span>
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <MemoizedKeyboard
+            className="h-6 w-6 text-xs sm:h-8 sm:w-8 sm:text-sm"
+            value="ALT"
+            isError={false}
+          />
+          +
+          <MemoizedKeyboard
+            className="h-6 w-6 text-xs sm:h-8 sm:w-8 sm:text-sm"
+            value="K"
+            isError={false}
+          />
+          <span className="mx-1">:</span>
+          <span className="text-sm sm:text-base">Quick Access</span>
         </div>
       </PopoverContent>
     </Popover>

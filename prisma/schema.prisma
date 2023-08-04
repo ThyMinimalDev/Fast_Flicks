@@ -31,6 +31,7 @@ model Leaderboard {
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  language  Lang     @default(EN)
 
   @@id([userId, words])
 }
@@ -46,6 +47,7 @@ view LeaderboardByWords {
   position  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  language  Lang     @default(EN)
 
   @@id([userId, words])
   @@map("leaderboard_by_words")
@@ -61,7 +63,18 @@ view Top5ByWords {
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  language  Lang     @default(EN)
 
   @@id([userId, words])
   @@map("top5_leaderboard")
+}
+
+enum Lang {
+  EN
+  ES
+  FR
+  CN
+  KR
+  JP
+  RU
 }
