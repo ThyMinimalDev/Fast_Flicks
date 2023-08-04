@@ -21,7 +21,7 @@ import { LeaderboardByWords } from '@prisma/client'
 type ModalProps = {
   scoresByLeaderboard: ScoresByLeaderboardWithUser
   userHighscores: LeaderboardByWords[]
-  username?: string
+  username: string | null | undefined
 }
 
 export const LeaderboardModal: FC<ModalProps> = ({

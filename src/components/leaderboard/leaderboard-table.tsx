@@ -36,7 +36,7 @@ const MemoizedRow = React.memo(Row)
 type TableProps = {
   scores?: LeaderboardWithUser[]
   userHighscore?: LeaderboardByWords
-  username?: string
+  username?: string | null | undefined
 }
 
 export const LeaderboardTable: FC<TableProps> = ({ scores, userHighscore, username }) => {
