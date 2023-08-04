@@ -17,7 +17,7 @@ export async function upsertHighscore(
       throw Error('User is not Auth')
     }
     await prisma.leaderboard.upsert({
-      where: { userId_words: { userId: user.id, words } },
+      where: { userId_words_language: { userId: user.id, words, language } },
       update: {
         score,
         wpm,
