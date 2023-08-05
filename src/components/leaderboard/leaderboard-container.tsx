@@ -6,6 +6,7 @@ import { WORDS_SETTINGS } from '@/constants/kbd'
 import { UserWithHighscores } from '@/types/user'
 import { LeaderboardByWords } from '@prisma/client'
 import { LeaderboardTabs } from './leaderboard-tabs'
+import { LANGUAGES } from '@/constants/ui'
 
 type LeaderboardProps = {
   user?: UserWithHighscores
@@ -14,7 +15,7 @@ type LeaderboardProps = {
 export const LeaderboardContainer: FC<LeaderboardProps> = async ({ user }) => {
   const dataByWords = await prisma.top5ByWords.findMany({
     include: { user: true },
-    take: WORDS_SETTINGS.length * 5, // top 5 for each test
+    take: LANGUAGES.length * WORDS_SETTINGS.length * 5, // top 5 for each language and each test
     orderBy: { score: 'desc' },
   })
   const scores = dataByWords.reduce((acc, current) => {
