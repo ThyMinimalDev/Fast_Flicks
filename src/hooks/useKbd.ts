@@ -3,7 +3,7 @@ import { getAcc, getGrossWPM, getWords } from '@/lib/words'
 import { InputType, LanguageSetting, WordsCountSettings } from '@/types/kbd'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
-import { useEvent, useKey, useToggle } from 'react-use'
+import { useEvent, useKey, usePrevious, useToggle } from 'react-use'
 import { ulid } from 'ulidx'
 import { ToastObject, useToast } from '@/components/ui/use-toast'
 import { UserWithHighscores } from '@/types/user'
@@ -28,6 +28,9 @@ type useKbdProps = {
   user?: UserWithHighscores
 }
 
+/**
+ * TODO: rewrite kbd behavior with xState state machine
+ */
 export const useKbd = ({
   isOpenLeaderboard,
   isOpenUserModal,
@@ -142,11 +145,15 @@ export const useKbd = ({
   })
 
   // Reset and generate new words when settings change
+  const previousWordsSettings = usePrevious(wordsSettings)
+  const previousLanguage = usePrevious(language)
   useEffect(() => {
-    handleReset()
-    const currentWords = getWords(wordsSettings, language)
-    setWords(currentWords)
-  }, [wordsSettings, language, handleReset])
+    if (previousWordsSettings !== wordsSettings || previousLanguage !== language) {
+      handleReset()
+      const currentWords = getWords(wordsSettings, language)
+      setWords(currentWords)
+    }
+  }, [wordsSettings, language, handleReset, previousWordsSettings, previousLanguage])
 
   // When user reaches end of current test text:
   // Compute stats & start next text test
