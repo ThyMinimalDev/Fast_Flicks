@@ -31,7 +31,32 @@ export const metadata: Metadata = {
   title: 'FastFlicks',
   description:
     'Enhance your 10-finger typing speed across multiple languages with our minimalistic typing test app. Compete on the leaderboard and boost your typing skills.',
-  icons: { icon: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon.ico' },
+  icons: {
+    icon: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '48x48',
+        url: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon_48.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '96x96',
+        url: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon_96.png',
+      },
+      {
+        rel: 'icon',
+        sizes: '144x144',
+        url: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon_144.png',
+      },
+      {
+        rel: 'icon',
+        sizes: '192x192',
+        url: 'https://public-fast-flicks.s3.eu-central-1.amazonaws.com/icon_192.png',
+      },
+    ],
+  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
