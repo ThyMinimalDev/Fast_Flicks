@@ -1,5 +1,5 @@
 'use client'
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import {
   AlertDialog,
   AlertDialogContent,
@@ -10,27 +10,15 @@ import {
 } from '@/components/ui/alert-dialog'
 import useStore from '@/hooks/useStore'
 import { useBoundStore } from '@/state/useBoundStore'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LeaderboardTable } from './leaderboard-table'
-import { WORDS_SETTINGS } from '@/constants/kbd'
-import { ScoresByLeaderboardWithUser } from '@/types/leaderboard'
 import { Button } from '../ui/button'
 import { EN_LANGUAGE } from '@/constants/ui'
-import { LeaderboardByWords } from '@prisma/client'
 
 type ModalProps = {
-  scoresByLeaderboard: ScoresByLeaderboardWithUser
-  userHighscores: LeaderboardByWords[]
-  username: string | null | undefined
+  children: ReactNode
 }
 
-export const LeaderboardModal: FC<ModalProps> = ({
-  scoresByLeaderboard,
-  userHighscores,
-  username,
-}) => {
+export const LeaderboardModal: FC<ModalProps> = ({ children }) => {
   const language = useStore(useBoundStore, state => state.language) ?? EN_LANGUAGE
-  const wordsSettings = useStore(useBoundStore, state => state.wordsSetting) ?? 50
   const isOpenLeaderboard =
     useStore(useBoundStore, state => state.isOpenLeaderboard) ?? false
   const toggleLeaderboard = useBoundStore(state => state.toggleLeaderboard)
@@ -47,28 +35,7 @@ export const LeaderboardModal: FC<ModalProps> = ({
           <AlertDialogDescription className="text-center font-light">
             Ranking by number of words.
           </AlertDialogDescription>
-          <Tabs defaultValue={wordsSettings.toString()} className="pt-1 font-light">
-            <TabsList className="grid w-full grid-cols-3">
-              {WORDS_SETTINGS.map(words => (
-                <TabsTrigger key={`trigger-words-${words}`} value={words.toString()}>
-                  {words}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {WORDS_SETTINGS.map(words => (
-              <TabsContent key={`content-words-${words}`} value={words.toString()}>
-                <LeaderboardTable
-                  scores={scoresByLeaderboard[words].filter(
-                    data => data.language === language
-                  )}
-                  userHighscore={userHighscores.find(
-                    score => score.words === words && score.language === language
-                  )}
-                  username={username}
-                />
-              </TabsContent>
-            ))}
-          </Tabs>
+          {children}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button onClick={toggleLeaderboard}>Close</Button>

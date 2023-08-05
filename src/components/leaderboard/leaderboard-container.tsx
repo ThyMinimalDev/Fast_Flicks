@@ -4,7 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { ScoresByLeaderboardWithUser } from '@/types/leaderboard'
 import { WORDS_SETTINGS } from '@/constants/kbd'
 import { UserWithHighscores } from '@/types/user'
-import { Leaderboard, LeaderboardByWords } from '@prisma/client'
+import { LeaderboardByWords } from '@prisma/client'
+import { LeaderboardTabs } from './leaderboard-tabs'
 
 type LeaderboardProps = {
   user?: UserWithHighscores
@@ -25,10 +26,12 @@ export const LeaderboardContainer: FC<LeaderboardProps> = async ({ user }) => {
   const userHighscores: LeaderboardByWords[] = user?.highscores ?? []
 
   return (
-    <LeaderboardModal
-      scoresByLeaderboard={scores}
-      userHighscores={userHighscores}
-      username={user?.username}
-    />
+    <LeaderboardModal>
+      <LeaderboardTabs
+        scoresByLeaderboard={scores}
+        userHighscores={userHighscores}
+        username={user?.username}
+      />
+    </LeaderboardModal>
   )
 }
