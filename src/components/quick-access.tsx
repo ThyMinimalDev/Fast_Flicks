@@ -18,13 +18,19 @@ type QuickAccessProps = {
   theme: UiMode
   toggleTheme: () => void
   isLeaderboardOpen: boolean
-  toggleLeaderboard: () => void
+  leaderboardCmd: () => void
+  signInCmd: () => void
+  signOutCmd: () => void
+  isAuth: boolean
 }
 export const QuickAccess: FC<QuickAccessProps> = ({
   theme,
   toggleTheme,
   isLeaderboardOpen,
-  toggleLeaderboard,
+  leaderboardCmd,
+  signInCmd,
+  signOutCmd,
+  isAuth,
 }) => {
   const isOpen = useBoundStore(state => state.isOpenQuickAccess)
   const toggleModal = useBoundStore(state => state.setIsOpenQuickAccess)
@@ -89,11 +95,20 @@ export const QuickAccess: FC<QuickAccessProps> = ({
             <CommandItem
               onSelect={() => {
                 onCommandSelect(() => {
-                  toggleLeaderboard()
+                  leaderboardCmd()
                 })
               }}
             >
               {isLeaderboardOpen ? 'Close' : 'Open'} Leaderboard
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                onCommandSelect(() => {
+                  isAuth ? signOutCmd() : signInCmd()
+                })
+              }}
+            >
+              {isAuth ? 'Sign Out' : 'Sign In'}
             </CommandItem>
           </CommandGroup>
         </CommandList>
