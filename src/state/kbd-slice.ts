@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand'
-import { UiSlice } from './createUiSlice'
+import { UiSlice } from './ui-slice'
 import { LanguageSetting, WordsCountSettings } from '@/types/kbd'
 import { EN_LANGUAGE } from '@/constants/ui'
 

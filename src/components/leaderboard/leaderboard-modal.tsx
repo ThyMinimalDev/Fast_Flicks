@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog'
-import useStore from '@/hooks/useStore'
-import { useBoundStore } from '@/state/useBoundStore'
+import useStore from '@/hooks/use-store'
+import { useBoundStore } from '@/state/use-bound-store'
 import { Button } from '../ui/button'
 import { EN_LANGUAGE } from '@/constants/ui'
 

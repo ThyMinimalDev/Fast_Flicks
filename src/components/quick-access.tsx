@@ -11,7 +11,7 @@ import {
 } from './ui/command'
 import useKeyboardJs from 'react-use/lib/useKeyboardJs'
 import { DARK_MODE, LANGUAGES, LIGHT_MODE } from '@/constants/ui'
-import { useBoundStore } from '@/state/useBoundStore'
+import { useBoundStore } from '@/state/use-bound-store'
 import { UiMode } from '@/types/ui'
 
 type QuickAccessProps = {

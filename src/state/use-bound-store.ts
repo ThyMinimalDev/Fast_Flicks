@@ -1,8 +1,8 @@
 import { create } from 'zustand'
-import { UiSlice, createUiSlice } from './createUiSlice'
+import { UiSlice, createUiSlice } from './ui-slice'
 import { persist } from 'zustand/middleware'
-import { KbdSlice, createKbdSlice } from './createKbdSlice'
-import { UserSlice, createUserSlice } from './createUserSlice'
+import { KbdSlice, createKbdSlice } from './kbd-slice'
+import { UserSlice, createUserSlice } from './user-slice'
 
 export const useBoundStore = create<UiSlice & KbdSlice & UserSlice>()(
   persist(
