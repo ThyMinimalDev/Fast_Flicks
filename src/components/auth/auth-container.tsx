@@ -1,7 +1,7 @@
 'use client'
 import React, { FC } from 'react'
 import { AuthModal } from './auth-modal'
-import { useBoundStore } from '@/state/useBoundStore'
+import { useBoundStore } from '@/state/use-bound-store'
 import { useStore } from 'zustand'
 import { Provider } from '@supabase/supabase-js'
 import { supbaseClientComponentClient } from '@/lib/supabase'
