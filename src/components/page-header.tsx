@@ -64,8 +64,11 @@ export const PageHeader: FC<HeaderProps> = ({ isAuth, className }) => {
         <QuickAccess
           theme={theme}
           toggleTheme={theme === DARK_MODE ? setLightTheme : setDarkTheme}
-          toggleLeaderboard={toggleLeaderboard}
+          leaderboardCmd={toggleLeaderboard}
           isLeaderboardOpen={isOpenLeaderboard}
+          signInCmd={toggleLoginModal}
+          signOutCmd={handleLogOut}
+          isAuth={isAuth}
         />
         <div className="flex flex-row gap-4">
           <TooltipProvider delayDuration={300}>
