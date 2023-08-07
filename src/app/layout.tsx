@@ -28,7 +28,7 @@ const chivo = Chivo_Mono({
 const comfortaa = Comfortaa({ subsets: ['latin'], weight: '400', preload: true })
 
 export const metadata: Metadata = {
-  title: 'FastFlicks',
+  title: 'Fast⎵Flicks',
   description:
     'Enhance your 10-finger typing speed across multiple languages with our minimalistic typing test app. Compete on the leaderboard and boost your typing skills.',
   icons: {
