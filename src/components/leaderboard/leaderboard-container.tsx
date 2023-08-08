@@ -7,6 +7,7 @@ import { UserWithHighscores } from '@/types/user'
 import { LeaderboardByWords } from '@prisma/client'
 import { LeaderboardTabs } from './leaderboard-tabs'
 import { LANGUAGES } from '@/constants/ui'
+import { LeaderboardMessage } from './leaderboard-message'
 
 type LeaderboardProps = {
   user?: UserWithHighscores
@@ -33,6 +34,7 @@ export const LeaderboardContainer: FC<LeaderboardProps> = async ({ user }) => {
         userHighscores={userHighscores}
         username={user?.username}
       />
+      <LeaderboardMessage isAuth={Boolean(user?.username)} />
     </LeaderboardModal>
   )
 }
