@@ -20,7 +20,7 @@ const Keyboard = ({ value, isError, className = '' }: KeyboardProps) => {
       <div
         className={cn(
           value === SPACE_SYMBOL && '-translate-y-1',
-          ['g', 'p', 'j'].includes(value) && '-translate-y-0.5'
+          ['g', 'p', 'j', 'y'].includes(value) && '-translate-y-0.5'
         )}
       >
         {value}
