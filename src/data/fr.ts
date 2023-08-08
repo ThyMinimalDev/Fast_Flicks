@@ -179,7 +179,6 @@ export const commonWords = [
   'nuit',
   'objectif',
   'occasion',
-  'œuvre',
   'opinion',
   'organisation',
   'origine',
