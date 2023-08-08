@@ -372,7 +372,6 @@ export const commonWords = [
   'build',
   'stay',
   'fall',
-  'oh',
   'nation',
   'plan',
   'cut',
