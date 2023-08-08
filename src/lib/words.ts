@@ -57,19 +57,16 @@ export const getWords = (
   }
 
   for (let index = 0; index < maxWordsCount; index++) {
-    if (characterCount > maxCharacters) {
-      break
-    }
-
     const word = generateWord()
     characterCount += word.length
-
     if (index === maxWordsCount - 1 || characterCount >= maxCharacters) {
       result.push(word)
+      break
     } else {
       result.push(word, SPACE_SYMBOL)
     }
   }
+
   return result
 }
 
