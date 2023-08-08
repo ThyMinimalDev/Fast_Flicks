@@ -1,5 +1,5 @@
 'use client'
-import React, { FC } from 'react'
+import React, { FC, useCallback, useMemo, useTransition } from 'react'
 import { MemoizedKBDSettings as Settings } from './kbd-settings'
 import { KBDBox as Box } from './kbd-box'
 import { KBDInputs as Inputs } from './kbd-inputs'
@@ -12,35 +12,74 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { upsertHighscore } from '@/actions/leaderboard'
 import { EN_LANGUAGE } from '@/constants/ui'
 import { DEFAULT_WORDS_SETTING } from '@/constants/kbd'
+import { useToast } from '@/components/ui/use-toast'
+import { useCapslock } from '@/hooks/use-capslock'
 
 type KBDProps = {}
 
 export const KBD: FC<KBDProps> = () => {
+  const user = useStore(useBoundStore, state => state.user)
+  const ACC = useStore(useBoundStore, state => state.ACC) ?? 0
+  const WPM = useStore(useBoundStore, state => state.WPM) ?? 0
+  const setWPM = useBoundStore(state => state.setWPM)
+  const setACC = useBoundStore(state => state.setACC)
+  const wordsSettings =
+    useStore(useBoundStore, state => state.wordsSetting) ?? DEFAULT_WORDS_SETTING
   const language = useStore(useBoundStore, state => state.language) ?? EN_LANGUAGE
+  const setWordsCount = useBoundStore(state => state.setWordsCount)
   const isOpenQuickAccess =
     useStore(useBoundStore, state => state.isOpenQuickAccess) ?? false
   const isOpenLeaderboard =
     useStore(useBoundStore, state => state.isOpenLeaderboard) ?? false
-  const user = useStore(useBoundStore, state => state.user)
-  const isFirstVisit = useStore(useBoundStore, state => state.isFirstVisit)
-  const wordsSettings =
-    useStore(useBoundStore, state => state.wordsSetting) ?? DEFAULT_WORDS_SETTING
-  const setWPM = useBoundStore(state => state.setWPM)
-  const setACC = useBoundStore(state => state.setACC)
-  const setWordsCount = useBoundStore(state => state.setWordsCount)
   const setIsFirstVisit = useBoundStore(state => state.setIsFirstVisit)
-  const ACC = useStore(useBoundStore, state => state.ACC) ?? 0
-  const WPM = useStore(useBoundStore, state => state.WPM) ?? 0
+  const isFirstVisit = useStore(useBoundStore, state => state.isFirstVisit)
+  const { toast } = useToast()
+  const [, startTransition] = useTransition()
+  const _ = useCapslock()
+
+  const onComplete = useCallback(
+    (wpm: number, acc: number, score: number) => {
+      setWPM(wpm)
+      setACC(acc)
+      const currentHighscore =
+        user?.highscores.find(
+          score => score.words === wordsSettings && score.language === language
+        )?.score ?? 0
+
+      if (!user?.username || currentHighscore >= score) {
+        return
+      }
+
+      startTransition(() =>
+        upsertHighscore({ wpm, acc, score, words: wordsSettings, language }, user)
+          .then(() => {
+            toast({
+              title: 'New Highscore! 🎉',
+              description: 'Your rank has been updated in the leaderboard',
+            })
+          })
+          .catch(console.error)
+      )
+    },
+    [language, setACC, setWPM, toast, user, wordsSettings]
+  )
+
+  const onReset = useCallback(() => {
+    setACC(0)
+    setWPM(0)
+  }, [setACC, setWPM])
+
+  const isModalOpen = useMemo(
+    () => isOpenQuickAccess || isOpenLeaderboard || Boolean(user && !user.username),
+    [isOpenLeaderboard, isOpenQuickAccess, user]
+  )
+
   const { inputs, words, currentLetter, errorMap, wordsString } = useKbd({
-    onNewHighscore: upsertHighscore,
-    isOpenLeaderboard,
-    isOpenQuickAccess,
-    isOpenUserModal: Boolean(user && !user.username),
+    onComplete,
+    onReset,
+    disabled: isModalOpen,
     language,
     wordsSettings,
-    setWPM,
-    setACC,
-    user,
   })
 
   return (

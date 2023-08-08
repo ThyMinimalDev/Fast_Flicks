@@ -64,6 +64,11 @@ export const LeaderboardTable: FC<TableProps> = ({ scores, userHighscore, userna
           return (
             <MemoizedRow
               key={'highscore' + highscore?.id + highscore?.userId + index}
+              className={
+                isInTop5 && username === highscore?.user?.username
+                  ? ' [&>*:first-child]:underline'
+                  : ''
+              }
               acc={highscore?.acc}
               wpm={highscore?.wpm}
               username={highscore?.user?.username}

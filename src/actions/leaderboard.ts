@@ -1,20 +1,25 @@
 'use server'
 import { prisma } from '@/lib/prisma'
-import { LanguageSetting, WordsCountSettings } from '@/types/kbd'
 import { UserWithHighscores } from '@/types/user'
+import { Leaderboard } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export async function upsertHighscore(
-  user: UserWithHighscores,
-  wpm: number,
-  acc: number,
-  score: number,
-  words: WordsCountSettings,
-  language: LanguageSetting
+  data: Pick<Leaderboard, 'score' | 'acc' | 'language' | 'words' | 'wpm'>,
+  user?: UserWithHighscores
 ) {
   try {
+    const { score, acc, wpm, words, language } = data
+
     if (!user) {
-      throw Error('User is not Auth')
+      throw Error('User is not set')
+    }
+    const currentHighscore =
+      user.highscores.find(score => score.words === words && score.language === language)
+        ?.score ?? 0
+
+    if (currentHighscore >= score) {
+      throw Error('Not a new Highscore')
     }
     await prisma.leaderboard.upsert({
       where: { userId_words_language: { userId: user.id, words, language } },
@@ -34,6 +39,6 @@ export async function upsertHighscore(
     })
     revalidatePath('/')
   } catch (err) {
-    console.error(err)
+    throw err
   }
 }

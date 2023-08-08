@@ -46,7 +46,7 @@ export const UserContainer: FC<ModalProps> = ({ user }) => {
     )
   useEffect(() => {
     if (user) setUser(user)
-  }, [user])
+  }, [setUser, user])
 
   useEffect(() => {
     if (Boolean(user && !user.username) && !isModalOpen) {
