@@ -28,6 +28,22 @@ type useKbdProps = {
   user?: UserWithHighscores
 }
 
+type KbdStateType = {
+  currentLetter: number
+  totalEntries: number
+  errorMap: { [key: number]: boolean }
+  totalErrors: number
+  inputs: InputType[]
+}
+
+const KBD_INIT_STATE = {
+  currentLetter: 0,
+  totalEntries: 0,
+  totalErrors: 0,
+  errorMap: {},
+  inputs: [],
+}
+
 /**
  * TODO: rewrite kbd behavior with xState state machine
  */
@@ -44,12 +60,9 @@ export const useKbd = ({
 }: useKbdProps) => {
   const { toast } = useToast()
   const [, startTransition] = useTransition()
-  const [currentLetter, setCurrentLetter] = useState<number>(0)
   const [words, setWords] = useState<string[]>([])
-  const [errorMap, setErrorMap] = useState<{ [key: number]: boolean }>({})
-  const [totalEntries, setTotalEntries] = useState<number>(0)
-  const [totalErrors, setTotalErrors] = useState<number>(0)
-  const [inputs, setInputs] = useState<InputType[]>([])
+  const [{ currentLetter, totalEntries, totalErrors, errorMap, inputs }, setKbd] =
+    useState<KbdStateType>(KBD_INIT_STATE)
   const startTimeStampRef = useRef(0)
   const endTimeStampRef = useRef(0)
   const wordsString = useMemo(() => words.join(''), [words])
@@ -59,17 +72,10 @@ export const useKbd = ({
   )
 
   const [capsLocked, toggleCapsLock] = useToggle(false)
-  const resetState = () => {
-    setInputs([])
-    setTotalEntries(0)
-    setCurrentLetter(0)
-    setErrorMap({})
-    setTotalErrors(0)
-  }
 
   const handleReset = useCallback(() => {
     if (!isModalOpen) {
-      resetState()
+      setKbd(_ => KBD_INIT_STATE)
       setWPM(0)
       setACC(0)
       const currentWords = getWords(wordsSettings, language)
@@ -78,7 +84,7 @@ export const useKbd = ({
   }, [setACC, setWPM, wordsSettings, isModalOpen, language])
 
   const handleNext = useCallback(() => {
-    resetState()
+    setKbd(_ => KBD_INIT_STATE)
     const currentWords = getWords(wordsSettings, language)
     setWords(currentWords)
   }, [wordsSettings, language])
@@ -88,40 +94,35 @@ export const useKbd = ({
   const onKeyDown = useCallback(
     ({ key, isTrusted }: { key: string; isTrusted: boolean }) => {
       if (!isModalOpen && isTrusted && key?.length === 1) {
-        setTotalEntries(totalEntries => {
+        setKbd(({ totalEntries, totalErrors, inputs, errorMap, currentLetter }) => {
+          const char = wordsString.charAt(currentLetter)
+          const isError = key === ' ' ? char !== SPACE_SYMBOL : char !== key
+          const inputsCopy = [...inputs]
+
           if (totalEntries === 0) {
             startTimeStampRef.current = Date.now()
           }
-          return totalEntries + 1
-        })
 
-        setCurrentLetter(state => {
-          const char = wordsString.charAt(state)
-          const isError = key === ' ' ? char !== SPACE_SYMBOL : char !== key
-
-          setInputs(inputs => {
-            if (inputs.length === 15) {
-              inputs.shift()
-            }
-            inputs.push({
-              id: ulid(),
-              value: key === ' ' ? SPACE_SYMBOL : key,
-              isError,
-            })
-            return [...inputs]
-          })
-
-          setErrorMap(errorMapState => ({
-            ...errorMapState,
-            [state]: errorMapState[state] ?? isError,
-          }))
-
-          if (isError) {
-            setTotalErrors(state => state + 1)
-            return state
+          if (inputsCopy.length === 15) {
+            inputsCopy.shift()
           }
 
-          return state + 1
+          inputsCopy.push({
+            id: ulid(),
+            value: key === ' ' ? SPACE_SYMBOL : key,
+            isError,
+          })
+
+          return {
+            totalEntries: totalEntries + 1,
+            totalErrors: isError ? totalErrors + 1 : totalErrors,
+            errorMap: {
+              ...errorMap,
+              [currentLetter]: errorMap[currentLetter] ?? isError,
+            },
+            currentLetter: isError ? currentLetter : currentLetter + 1,
+            inputs: inputsCopy,
+          }
         })
       }
     },
