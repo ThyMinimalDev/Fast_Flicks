@@ -51,14 +51,13 @@ export const UserForm: FC<FormProps> = ({ onCancel, onSubmit, disabled }) => {
               <FormControl>
                 <Input placeholder="JohnDoe" {...field} disabled={disabled} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
 
         <div className="flex flex-row items-center justify-end gap-2">
-          <Button disabled={disabled} onClick={onCancel}>
+          <Button type="button" disabled={disabled} onClick={onCancel}>
             Cancel
           </Button>
           <Button type="submit" disabled={disabled}>
