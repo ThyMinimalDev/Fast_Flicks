@@ -7,8 +7,7 @@ import { useBoundStore } from '@/state/use-bound-store'
 import { updateUsername } from '@/actions/user'
 import { useToast } from '../ui/use-toast'
 import { UserForm, UserFormValues } from './user-form'
-import { supbaseClientComponentClient } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/use-auth'
 
 type ModalProps = { user?: UserWithHighscores }
 
@@ -17,11 +16,7 @@ export const UserContainer: FC<ModalProps> = ({ user }) => {
   const setUser = useBoundStore(state => state.setUser)
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
-  const router = useRouter()
-  const handleLogOut = async () => {
-    await supbaseClientComponentClient.auth.signOut()
-    router.refresh()
-  }
+  const { handleLogOut } = useAuth()
 
   const handleUpdateUsername = (values: UserFormValues) =>
     startTransition(() =>
