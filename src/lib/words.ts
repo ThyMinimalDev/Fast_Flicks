@@ -17,7 +17,14 @@ import {
   FR_LANGUAGE,
   CN_LANGUAGE,
 } from '@/constants/ui'
-import { LanguageSetting } from '@/types/kbd'
+import {
+  GenerateWordsDataProps,
+  LanguageSetting,
+  Stats,
+  WordsData,
+  ComputeStatsProps,
+} from '@/types/kbd'
+import dayjs from 'dayjs'
 
 const pickCommonWords = (lang: LanguageSetting) => {
   switch (lang) {
@@ -88,4 +95,27 @@ export const getAcc = (totalEntries: number, errorCount: number) => {
   if (accuracy < 0) return 0
   if (accuracy > 100) return 100
   return accuracy
+}
+
+export const computeStats = ({
+  totalEntries,
+  totalErrors,
+  startTime,
+  wordsSetting,
+}: ComputeStatsProps): Stats => {
+  const timeElapsed = dayjs(Date.now()).diff(dayjs(startTime), 'minute', true)
+  const WPM = Math.round(getGrossWPM(totalEntries, timeElapsed)) ?? 0
+  const ACC = Math.round(getAcc(totalEntries, totalErrors)) ?? 0
+  const score = (WPM * 0.7 + ACC * 1.3) * (wordsSetting / 2)
+  return {
+    WPM,
+    ACC,
+    score,
+  }
+}
+
+export const generateWordsData = (state: GenerateWordsDataProps): WordsData => {
+  const words = getWords(state?.wordsSetting ?? 25, state?.language ?? EN_LANGUAGE)
+  const wordsString = words.join('')
+  return { words, wordsString }
 }

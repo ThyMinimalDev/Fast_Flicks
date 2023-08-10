@@ -3,14 +3,17 @@ import { WordsCountSettings } from '@/types/kbd'
 import { SettingsIcon } from 'lucide-react'
 import React, { FC } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { WORDS_SETTINGS } from '@/constants/kbd'
+import { DEFAULT_WORDS_SETTING, WORDS_SETTINGS } from '@/constants/kbd'
 
 type SettingsProps = {
   wordCount: number
   onChangeWordCount: (count: WordsCountSettings) => void
 }
 
-const KBDSettings: FC<SettingsProps> = ({ wordCount = 50, onChangeWordCount }) => {
+const KBDSettings: FC<SettingsProps> = ({
+  wordCount = DEFAULT_WORDS_SETTING,
+  onChangeWordCount,
+}) => {
   return (
     <div className="flex flex-row items-center gap-1 text-xs sm:text-base">
       <SettingsIcon
