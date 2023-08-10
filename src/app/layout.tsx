@@ -29,6 +29,17 @@ const comfortaa = Comfortaa({ subsets: ['latin'], weight: '400', preload: true }
 
 export const metadata: Metadata = {
   title: 'Fast⎵Flicks',
+  openGraph: {
+    type: 'website',
+    title: 'Fast⎵Flicks',
+    description: 'Practice and improve your 10 fingers typing speed!',
+    url: 'https://fast-flicks.com',
+  },
+  manifest: '/manifest.json',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#111' },
+    { media: '(prefers-color-scheme: light)', color: '#F5F5F5' },
+  ],
   description:
     'Enhance your 10-finger typing speed across multiple languages with our minimalistic typing test app. Compete on the leaderboard and boost your typing skills.',
   icons: {
