@@ -13,6 +13,7 @@ import useKeyboardJs from 'react-use/lib/useKeyboardJs'
 import { DARK_MODE, LANGUAGES, LIGHT_MODE } from '@/constants/ui'
 import { useBoundStore } from '@/state/use-bound-store'
 import { UiMode } from '@/types/ui'
+import { PICK_LANG } from '@/state/kbd-slice'
 
 type QuickAccessProps = {
   theme: UiMode
@@ -35,7 +36,8 @@ export const QuickAccess: FC<QuickAccessProps> = ({
   const isOpen = useBoundStore(state => state.isOpenQuickAccess)
   const toggleModal = useBoundStore(state => state.setIsOpenQuickAccess)
   const language = useBoundStore(state => state.language)
-  const setLang = useBoundStore(state => state.setLang)
+  const dispatch = useBoundStore(state => state.dispatch)
+
   const [isPressed] = useKeyboardJs('alt + k')
   useEffect(() => {
     if (isPressed) {
@@ -57,7 +59,7 @@ export const QuickAccess: FC<QuickAccessProps> = ({
         }}
       >
         <CommandInput
-          onBlur={() => toggleModal(false)}
+          onBlur={() => toggleModal(true)}
           placeholder="Pick language and send commands..."
         />
         <CommandList>
@@ -67,7 +69,7 @@ export const QuickAccess: FC<QuickAccessProps> = ({
               <CommandItem
                 onSelect={() => {
                   onCommandSelect(() => {
-                    setLang(lang)
+                    dispatch({ type: PICK_LANG, language: lang })
                   })
                 }}
                 key={`${lang}-cmd-item`}

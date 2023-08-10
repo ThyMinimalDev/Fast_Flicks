@@ -1,5 +1,5 @@
 'use client'
-import React, { FC, useCallback, useMemo, useTransition } from 'react'
+import React, { FC, useCallback } from 'react'
 import { MemoizedKBDSettings as Settings } from './kbd-settings'
 import { KBDBox as Box } from './kbd-box'
 import { KBDInputs as Inputs } from './kbd-inputs'
@@ -9,78 +9,45 @@ import { useKbd } from '@/hooks/use-kbd'
 import { MemoizedKBDStats as Stats } from './kbd-stats'
 import { MemoizedKBDInfoBubble as KBDInfoBubble } from './kbd-info-bubble'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { upsertHighscore } from '@/actions/leaderboard'
-import { EN_LANGUAGE } from '@/constants/ui'
 import { DEFAULT_WORDS_SETTING } from '@/constants/kbd'
-import { useToast } from '@/components/ui/use-toast'
 import { useCapslock } from '@/hooks/use-capslock'
+import { INPUT, PICK_WORDS, RESET } from '@/state/kbd-slice'
+import { useToast } from '@/components/ui/use-toast'
 
 type KBDProps = {}
 
 export const KBD: FC<KBDProps> = () => {
-  const user = useStore(useBoundStore, state => state.user)
   const ACC = useStore(useBoundStore, state => state.ACC) ?? 0
   const WPM = useStore(useBoundStore, state => state.WPM) ?? 0
-  const setWPM = useBoundStore(state => state.setWPM)
-  const setACC = useBoundStore(state => state.setACC)
+  const currentLetter = useStore(useBoundStore, state => state.currentLetter) ?? 0
+  const words = useStore(useBoundStore, state => state.words) ?? []
+  const inputs = useStore(useBoundStore, state => state.inputs) ?? []
+  const wordsString = useStore(useBoundStore, state => state.wordsString) ?? ''
+  const errorMap = useStore(useBoundStore, state => state.errorMap) ?? {}
   const wordsSettings =
     useStore(useBoundStore, state => state.wordsSetting) ?? DEFAULT_WORDS_SETTING
-  const language = useStore(useBoundStore, state => state.language) ?? EN_LANGUAGE
-  const setWordsCount = useBoundStore(state => state.setWordsCount)
-  const isOpenQuickAccess =
-    useStore(useBoundStore, state => state.isOpenQuickAccess) ?? false
-  const isOpenLeaderboard =
-    useStore(useBoundStore, state => state.isOpenLeaderboard) ?? false
-  const setIsFirstVisit = useBoundStore(state => state.setIsFirstVisit)
   const isFirstVisit = useStore(useBoundStore, state => state.isFirstVisit)
+  const setIsFirstVisit = useBoundStore(state => state.setIsFirstVisit)
+  const dispatch = useBoundStore(state => state.dispatch)
   const { toast } = useToast()
-  const [, startTransition] = useTransition()
-  const _ = useCapslock()
 
-  const onComplete = useCallback(
-    (wpm: number, acc: number, score: number) => {
-      setWPM(wpm)
-      setACC(acc)
-      const currentHighscore =
-        user?.highscores.find(
-          score => score.words === wordsSettings && score.language === language
-        )?.score ?? 0
-
-      if (!user?.username || currentHighscore >= score) {
-        return
-      }
-
-      startTransition(() =>
-        upsertHighscore({ wpm, acc, score, words: wordsSettings, language }, user)
-          .then(() => {
-            toast({
-              title: 'New Highscore! 🎉',
-              description: 'Your rank has been updated in the leaderboard',
-            })
+  const onInput = useCallback(
+    (key: string) =>
+      dispatch({
+        type: INPUT,
+        key,
+        onSuccess: () => {
+          toast({
+            title: 'New Highscore! 🎉',
+            description: 'Your rank has been updated in the leaderboard',
           })
-          .catch(console.error)
-      )
-    },
-    [language, setACC, setWPM, toast, user, wordsSettings]
+        },
+      }),
+    [dispatch, toast]
   )
-
-  const onReset = useCallback(() => {
-    setACC(0)
-    setWPM(0)
-  }, [setACC, setWPM])
-
-  const isModalOpen = useMemo(
-    () => isOpenQuickAccess || isOpenLeaderboard || Boolean(user && !user.username),
-    [isOpenLeaderboard, isOpenQuickAccess, user]
-  )
-
-  const { inputs, words, currentLetter, errorMap, wordsString } = useKbd({
-    onComplete,
-    onReset,
-    disabled: isModalOpen,
-    language,
-    wordsSettings,
-  })
+  const onEsc = useCallback(() => dispatch({ type: RESET }), [dispatch])
+  useKbd({ onEsc, onInput })
+  useCapslock()
 
   return (
     <div
@@ -88,7 +55,12 @@ export const KBD: FC<KBDProps> = () => {
     >
       <div className="flex w-full flex-row justify-between">
         <TooltipProvider delayDuration={300}>
-          <Settings wordCount={wordsSettings ?? 50} onChangeWordCount={setWordsCount} />
+          <Settings
+            wordCount={wordsSettings}
+            onChangeWordCount={wordsSetting => {
+              dispatch({ type: PICK_WORDS, wordsSetting })
+            }}
+          />
           <Stats WPM={WPM ?? 0} ACC={ACC ?? 0} />
         </TooltipProvider>
       </div>

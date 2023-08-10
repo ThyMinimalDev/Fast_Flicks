@@ -25,3 +25,21 @@ export type LanguageSetting =
   | typeof RU_LANGUAGE
   | typeof KR_LANGUAGE
   | typeof EN_LANGUAGE
+
+export type KbdStateType = {
+  currentLetter: number
+  totalEntries: number
+  errorMap: { [key: number]: boolean }
+  totalErrors: number
+  inputs: InputType[]
+}
+export type ComputeStatsProps = {
+  totalEntries: number
+  totalErrors: number
+  startTime: number
+  wordsSetting: number
+}
+export type Stats = { WPM: number; ACC: number; score: number }
+
+export type GenerateWordsDataProps = { language?: LanguageSetting; wordsSetting?: number }
+export type WordsData = { words: string[]; wordsString: string }
