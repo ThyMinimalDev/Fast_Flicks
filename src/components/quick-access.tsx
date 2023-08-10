@@ -59,7 +59,7 @@ export const QuickAccess: FC<QuickAccessProps> = ({
         }}
       >
         <CommandInput
-          onBlur={() => toggleModal(true)}
+          onBlur={() => toggleModal(false)}
           placeholder="Pick language and send commands..."
         />
         <CommandList>
