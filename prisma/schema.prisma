@@ -49,7 +49,7 @@ view LeaderboardByWords {
   updatedAt DateTime @default(now()) @updatedAt
   language  Lang     @default(EN)
 
-  @@id([userId, words, language])
+  @@unique([userId, words, language])
   @@map("leaderboard_by_words")
 }
 
@@ -65,7 +65,7 @@ view Top5ByWords {
   updatedAt DateTime @default(now()) @updatedAt
   language  Lang     @default(EN)
 
-  @@id([userId, words, language])
+  @@unique([userId, words, language])
   @@map("top5_leaderboard")
 }
 

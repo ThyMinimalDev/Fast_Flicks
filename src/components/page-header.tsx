@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useBoundStore } from '@/state/use-bound-store'
 import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
-import { supbaseClientComponentClient } from '@/lib/supabase'
+import { getSupabaseBrowserClient } from '@/lib/supabase'
 import { useToast } from './ui/use-toast'
 import Link from 'next/link'
 
@@ -43,7 +43,7 @@ export const PageHeader: FC<HeaderProps> = ({ isAuth, className }) => {
   const setLightTheme = () => setTheme(LIGHT_MODE)
 
   const handleLogOut = async () => {
-    await supbaseClientComponentClient.auth.signOut()
+    await getSupabaseBrowserClient().auth.signOut()
     toast({
       title: 'Until Next Time!',
       description: 'You Are Now Signed Out 👋',

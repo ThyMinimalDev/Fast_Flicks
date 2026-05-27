@@ -1,5 +1,5 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Comfortaa } from 'next/font/google'
 import React, { Suspense } from 'react'
 import { PHProvider, PostHogPageview } from './providers'
@@ -36,10 +36,6 @@ export const metadata: Metadata = {
     url: 'https://fast-flicks.com',
   },
   manifest: '/manifest.json',
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#111' },
-    { media: '(prefers-color-scheme: light)', color: '#F5F5F5' },
-  ],
   description:
     'Enhance your 10-finger typing speed across multiple languages with our minimalistic typing test app. Compete on the leaderboard and boost your typing skills.',
   icons: {
@@ -70,8 +66,15 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#111' },
+    { media: '(prefers-color-scheme: light)', color: '#F5F5F5' },
+  ],
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const theme = cookieStore.get('theme')
   const session = await getSession()
   let user = undefined

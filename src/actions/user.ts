@@ -1,18 +1,22 @@
 'use server'
 import { prisma } from '@/lib/prisma'
+import { getSupabaseServerClient } from '@/lib/supabase-server'
 import { UserWithHighscores } from '@/types/user'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 
 export async function updateUsername(username: string) {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = await getSupabaseServerClient()
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user?.id) {
+    throw new Error('Unauthorized')
+  }
+
   try {
     const result = await prisma.user.update({
-      where: { id: session?.user.id },
+      where: { id: user.id },
       data: { username },
     })
 
@@ -27,15 +31,14 @@ export async function updateUsername(username: string) {
 }
 
 export async function getUser(id: string): Promise<UserWithHighscores | null> {
+  if (!id) {
+    throw new Error('Missing auth user id')
+  }
   try {
-    if (!id) {
-      throw new Error('Missing auth user id')
-    }
-    const user = await prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: { id },
       include: { highscores: true },
     })
-    return user
   } catch (err) {
     console.error(err)
     throw err
@@ -43,15 +46,14 @@ export async function getUser(id: string): Promise<UserWithHighscores | null> {
 }
 
 export async function createUser(id: string): Promise<UserWithHighscores> {
+  if (!id) {
+    throw new Error('Missing auth user id')
+  }
   try {
-    if (!id) {
-      throw new Error('Missing auth user id')
-    }
-    const user = await prisma.user.create({
-      data: { id: id, username: undefined },
+    return await prisma.user.create({
+      data: { id, username: undefined },
       include: { highscores: true },
     })
-    return user
   } catch (err) {
     console.error(err)
     throw err
@@ -59,16 +61,10 @@ export async function createUser(id: string): Promise<UserWithHighscores> {
 }
 
 export async function getOrCreateUser(id: string): Promise<UserWithHighscores> {
-  try {
-    if (!id) {
-      throw new Error('Missing auth user id')
-    }
-    let user = await getUser(id)
-    if (user?.id) return user
-
-    return await createUser(id)
-  } catch (err) {
-    console.error(err)
-    throw err
+  if (!id) {
+    throw new Error('Missing auth user id')
   }
+  const existing = await getUser(id)
+  if (existing?.id) return existing
+  return createUser(id)
 }

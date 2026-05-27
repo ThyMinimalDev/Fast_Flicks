@@ -53,16 +53,13 @@ const handleTestCompleted = (state: KbdSlice & UserSlice, onSuccess: () => void)
     )?.score ?? 0
 
   if (state.user?.username && score > currentHighscore) {
-    upsertHighscore(
-      {
-        wpm: WPM,
-        acc: ACC,
-        score,
-        words: state.wordsSetting,
-        language: state.language,
-      },
-      state.user
-    )
+    upsertHighscore({
+      wpm: WPM,
+      acc: ACC,
+      score,
+      words: state.wordsSetting,
+      language: state.language,
+    })
       .then(() => {
         onSuccess()
       })

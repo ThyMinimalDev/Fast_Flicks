@@ -1,8 +1,13 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 
-// create singleton client side supabaseClient
-export const supbaseClientComponentClient = (function () {
-  const supabase = createClientComponentClient({ isSingleton: true })
+let browserClient: ReturnType<typeof createBrowserClient> | undefined
 
-  return supabase
-})()
+export function getSupabaseBrowserClient() {
+  if (!browserClient) {
+    browserClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+  }
+  return browserClient
+}
